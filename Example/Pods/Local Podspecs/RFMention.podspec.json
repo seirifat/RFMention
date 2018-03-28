@@ -1,8 +1,8 @@
 {
   "name": "RFMention",
   "version": "0.1.0",
-  "summary": "A short description of RFMention.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "Mention people/user in UITextView",
+  "description": "You can Mention people/user in UITextView likes whatsapp",
   "homepage": "https://github.com/seirifat/RFMention",
   "license": {
     "type": "MIT",
@@ -16,7 +16,8 @@
     "tag": "0.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
-  "source_files": "RFMention/Classes/**/*"
+  "source_files": "RFMention/Classes/**/*",
+  "swift_version": "4"
 }
