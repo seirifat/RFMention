@@ -1,11 +1,7 @@
 PODS:
-  - Nimble (7.0.3)
-  - Quick (1.2.0)
   - RFMention (0.1.0)
 
 DEPENDENCIES:
-  - Nimble (~> 7.0.2)
-  - Quick (~> 1.2.0)
   - RFMention (from `../`)
 
 EXTERNAL SOURCES:
@@ -13,10 +9,8 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
-  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   RFMention: 648001d663c203102bf893ba44d8bb49a0d87c90
 
-PODFILE CHECKSUM: 8566535847c5e0a81b9169857a4f0ea3de2a8e02
+PODFILE CHECKSUM: 22e46e6f4c46e99f907a52cd5b48173b000e0421
 
 COCOAPODS: 1.4.0
