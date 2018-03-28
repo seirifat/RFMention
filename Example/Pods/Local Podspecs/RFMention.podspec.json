@@ -1,0 +1,22 @@
+{
+  "name": "RFMention",
+  "version": "0.1.0",
+  "summary": "A short description of RFMention.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/seirifat/RFMention",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "seirifat": "garu.okigaru@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/seirifat/RFMention.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "RFMention/Classes/**/*"
+}
