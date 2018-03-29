@@ -9,19 +9,19 @@
 import UIKit
 
 open class RFMentionItem {
-    open var id: Int64 = 0
-    open var text = ""
+    public var id: Int64 = 0
+    public var text = ""
     public init(id:Int64 = 0, text: String = "") {
         self.id = id
         self.text = text
     }
 }
 
-public struct MentionedItem {
-    public var id: Int64 = 0
-    public var text = ""
-    public var textAt = ""
-    public var range = NSRange()
+struct MentionedItem {
+    var id: Int64 = 0
+    var text = ""
+    var textAt = ""
+    var range = NSRange()
 }
 
 open class RFMentionTextViewViewController: UIViewController {
@@ -37,7 +37,7 @@ open class RFMentionTextViewViewController: UIViewController {
     var isTextViewSearch = false
     var cellHeight = 44
     
-    public var mentionedItems = [MentionedItem]()
+    var mentionedItems = [MentionedItem]()
     private var currentMention = MentionedItem()
     
     var mentionAttributed: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.blue]
@@ -49,7 +49,6 @@ open class RFMentionTextViewViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.view.isUserInteractionEnabled = false
         tableViewMention = UITableView(frame: CGRect(x: 0, y: 0, width: tableWidth, height: cellHeight * rfMentionItems.count), style: UITableViewStyle.plain)
         view.addSubview(tableViewMention)
         tableViewMention.register(UITableViewCell.self, forCellReuseIdentifier: "defCell")
@@ -61,18 +60,12 @@ open class RFMentionTextViewViewController: UIViewController {
     
     // MARK: METHODS
     
-    public func setUpMentionTextView(parentController: UIViewController, textView: UITextView, itemList: [RFMentionItem]) {
-        
-        
-        parentController.addChildViewController(self)
-        parentController.view.addSubview(self.view)
-        
+    public func setUpMentionTextView(textView: UITextView, itemList: [RFMentionItem]) {
         textViewMention = textView
         rfMentionItems = itemList
         rfMentionItemsFilter = rfMentionItems
         textViewMention.delegate = self
         reloadViewTable()
-        tableViewMention.isUserInteractionEnabled = true
         mentionedItems = [MentionedItem]()
         textViewMention.attributedText = NSAttributedString(string: " ", attributes: defaultAttributed)
         
@@ -108,7 +101,6 @@ open class RFMentionTextViewViewController: UIViewController {
     }
     
     private func showList() {
-        self.view.isUserInteractionEnabled = true
         if self.isTableHidden == true {
             self.tableViewMentionVConstraint[1].constant = 0
             UIView.transition(with: tableViewMention, duration: 0.3, options: .transitionCrossDissolve, animations: {
@@ -121,8 +113,6 @@ open class RFMentionTextViewViewController: UIViewController {
     }
     
     private func hideList() {
-        self.view.isUserInteractionEnabled = false
-        rfMentionItemsFilter = rfMentionItems
         if self.isTableHidden == false {
             let tableHeight = rfMentionItemsFilter.count * cellHeight
             self.tableViewMentionVConstraint[1].constant = -CGFloat(tableHeight)
@@ -173,6 +163,8 @@ extension RFMentionTextViewViewController: UITableViewDelegate, UITableViewDataS
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         isTextViewSearch = false
+        searchString = ""
+        
         
         let mutableAttributed = NSMutableAttributedString()
         mutableAttributed.append(textViewMention.attributedText)
@@ -183,22 +175,20 @@ extension RFMentionTextViewViewController: UITableViewDelegate, UITableViewDataS
         currentMention.id = rfMentionItemsFilter[indexPath.row].id
         currentMention.text = rfMentionItemsFilter[indexPath.row].text
         currentMention.textAt = "@" + currentMention.text
+        currentMention.range = NSMakeRange(currentMention.range.location, currentMention.textAt.count)
+        
+        mentionedItems.append(currentMention)
         
         let mentionedText = NSAttributedString(string: currentMention.textAt, attributes: attributesStyle)
         
         if let selectedRange = textViewMention.selectedTextRange {
-            let cursorPosition = textViewMention.offset(from: textViewMention.beginningOfDocument, to: selectedRange.start)
-            print("\(cursorPosition)")
-            mutableAttributed.insert(mentionedText, at: cursorPosition)
-            mutableAttributed.insert(NSAttributedString(string: " ", attributes: defaultAttributed), at: cursorPosition + rfMentionItemsFilter[indexPath.row].text.count + 1)
-//            mutableAttributed.addAttributes(defaultAttributed, range: NSMakeRange(cursorPosition, 0))
             mutableAttributed.replaceCharacters(in: NSMakeRange(currentMention.range.location, searchString.count + 1), with: NSAttributedString(string: ""))
+            let cursorPosition = textViewMention.offset(from: textViewMention.beginningOfDocument, to: selectedRange.start)
+//            print("\(cursorPosition)")
+            mutableAttributed.insert(mentionedText, at: cursorPosition - 1)
+            mutableAttributed.insert(NSAttributedString(string: " ", attributes: defaultAttributed), at: cursorPosition + rfMentionItemsFilter[indexPath.row].text.count)
+            mutableAttributed.addAttributes(defaultAttributed, range: NSMakeRange(cursorPosition, 0))
         }
-        
-        searchString = ""
-        currentMention.range = NSMakeRange(currentMention.range.location, currentMention.textAt.count)
-        
-        mentionedItems.append(currentMention)
         
 //        mutableAttributed.addAttribute(NSAttributedStringKey.backgroundColor, value: UIColor.yellow, range: currentMention.range)
         
