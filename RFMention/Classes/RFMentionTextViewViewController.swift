@@ -142,12 +142,18 @@ open class RFMentionTextViewViewController: UIViewController {
             rfMentionItemsFilter = rfMentionItems.filter({ item -> Bool in
                 return item.text.lowercased().contains(searchString.lowercased())
             })
+            
         } else {
             rfMentionItemsFilter = rfMentionItems
         }
         let tableHeight = rfMentionItemsFilter.count * cellHeight
         self.tableViewMentionVConstraint[0].constant = CGFloat(tableHeight)
         self.tableViewMention.reloadData()
+        if rfMentionItemsFilter.count <= 0 {
+            self.searchString = ""
+            self.isTextViewSearch = false
+            self.hideList()
+        }
     }
     
 }
