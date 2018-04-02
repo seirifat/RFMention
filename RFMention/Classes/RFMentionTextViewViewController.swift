@@ -57,6 +57,7 @@ open class RFMentionTextViewViewController: UIViewController {
         tableViewMention.dataSource = self
         tableViewMention.isHidden = isTableHidden
         tableViewMention.translatesAutoresizingMaskIntoConstraints = false
+        textViewMention.translatesAutoresizingMaskIntoConstraints = false
     }
     
     // MARK: METHODS
@@ -76,30 +77,37 @@ open class RFMentionTextViewViewController: UIViewController {
         mentionedItems = [MentionedItem]()
         textViewMention.attributedText = NSAttributedString(string: " ", attributes: defaultAttributed)
         
-        let views: [String: Any] = [
-            "textViewMention": textViewMention,
-            "tableViewMention": tableViewMention
-        ]
-        
-        var allConstraints: [NSLayoutConstraint] = []
-        
-        let tableViewMentionHConstraint = NSLayoutConstraint.constraints(
-            withVisualFormat: "H:|-0-[tableViewMention]-0-|",
-            metrics: nil,
-            views: views)
-        allConstraints += tableViewMentionHConstraint
-        
         var tableHeight = rfMentionItemsFilter.count * cellHeight
         if rfMentionItems.count > 5 {
             tableHeight = cellHeight * 5
         }
+        _ = self.addConstraintsWithFormat("H:[v0(\(UIScreen.main.bounds.width))]", views: tableViewMention,textViewMention)
+        tableViewMentionVConstraint = self.addConstraintsWithFormat("V:[v0(\(tableHeight))]-(-\(tableHeight))-[v1]", views: tableViewMention,textViewMention)
         
-        tableViewMentionVConstraint = NSLayoutConstraint.constraints(
-            withVisualFormat: "V:[tableViewMention(\(tableHeight))]-(-\(tableHeight))-[textViewMention]",
-            metrics: nil,
-            views: views)
-        allConstraints += tableViewMentionVConstraint
-        NSLayoutConstraint.activate(allConstraints)
+//        let views: [String: Any] = [
+//            "textViewMention": textViewMention,
+//            "tableViewMention": tableViewMention
+//        ]
+//
+//        var allConstraints: [NSLayoutConstraint] = []
+//
+//        let tableViewMentionHConstraint = NSLayoutConstraint.constraints(
+//            withVisualFormat: "H:|-0-[tableViewMention]-0-|",
+//            metrics: nil,
+//            views: views)
+//        allConstraints += tableViewMentionHConstraint
+//
+//        var tableHeight = rfMentionItemsFilter.count * cellHeight
+//        if rfMentionItems.count > 5 {
+//            tableHeight = cellHeight * 5
+//        }
+//
+//        tableViewMentionVConstraint = NSLayoutConstraint.constraints(
+//            withVisualFormat: "V:[tableViewMention(\(tableHeight))]-(-\(tableHeight))-[textViewMention]",
+//            metrics: nil,
+//            views: views)
+//        allConstraints += tableViewMentionVConstraint
+//        NSLayoutConstraint.activate(allConstraints)
     }
     
     private func reloadViewTable() {
@@ -277,7 +285,7 @@ extension RFMentionTextViewViewController: UITextViewDelegate {
         if text == "@" {
             currentMention = MentionedItem(id: 0, text: "", textAt: "@", range: range)
             let tableHeight = rfMentionItemsFilter.count * cellHeight
-            self.tableViewMentionVConstraint[0].constant = CGFloat(tableHeight)
+            self.tableViewMentionVConstraint[1].constant = CGFloat(tableHeight)
             isTextViewSearch = true
             rfMentionItemsFilter = rfMentionItems
             tableViewMention.reloadData()
@@ -299,4 +307,18 @@ extension RFMentionTextViewViewController: UITextViewDelegate {
         return true
     }
     
+}
+
+
+extension RFMentionTextViewViewController {
+    func addConstraintsWithFormat(_ format: String, views: UIView...) -> [NSLayoutConstraint] {
+        var viewsDictionary = [String: UIView]()
+        for (index, view) in views.enumerated() {
+            let key = "v\(index)"
+            viewsDictionary[key] = view
+        }
+        let constraints = NSLayoutConstraint.constraints(withVisualFormat: format, options: [], metrics: nil, views: viewsDictionary)
+        NSLayoutConstraint.activate(constraints)
+        return constraints
+    }
 }

@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     @IBOutlet var textView: UITextView!
     @IBOutlet var tableView: UITableView!
     
+    @IBOutlet var constraintBottom: NSLayoutConstraint!
+    
     let rfController = RFMentionTextViewViewController()
     
     override func viewDidLoad() {
@@ -38,6 +40,9 @@ class ViewController: UIViewController {
         itemsArray.append(aldi)
         
         rfController.setUpMentionTextView(parentController: self, textView: textView, itemList: itemsArray)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotif(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotif(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
     }
 
 
@@ -52,13 +57,27 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    @objc func handleKeyboardNotif(notification: NSNotification) {
+        if let userInfo = notification.userInfo {
+            let isKeyboardShow = notification.name == Notification.Name.UIKeyboardWillShow
+            
+            let keyboardFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
+            print(keyboardFrame)
+            constraintBottom.constant = isKeyboardShow ? keyboardFrame.height : 0
+            print(constraintBottom.constant)
+            UIView.animate(withDuration: 0.1, animations: {
+                self.view.layoutIfNeeded()
+            })
+            tableView.scrollToRow(at: IndexPath(row: 54, section: 0), at: UITableViewScrollPosition.bottom, animated: true)
+        }
+    }
     
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 55
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
