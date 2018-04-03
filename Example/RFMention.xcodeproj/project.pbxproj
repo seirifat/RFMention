@@ -13,6 +13,7 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		EF0805C92072467400676577 /* TableSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF0805C82072467400676577 /* TableSampleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		8A3E395D990612E074311F83 /* Pods_RFMention_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RFMention_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4DA472466834C0F800BAF5F /* Pods-RFMention_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RFMention_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RFMention_Tests/Pods-RFMention_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DFB33B44AB6AFA968F0A9234 /* RFMention.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = RFMention.podspec; path = ../RFMention.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		EF0805C82072467400676577 /* TableSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				EF0805C82072467400676577 /* TableSampleViewController.swift */,
 			);
 			name = "Example for RFMention";
 			path = RFMention;
@@ -249,6 +252,7 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				EF0805C92072467400676577 /* TableSampleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

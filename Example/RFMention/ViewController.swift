@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     
     @IBOutlet var constraintBottom: NSLayoutConstraint!
     
-    let rfController = RFMentionTextViewViewController()
+    var rfMention: RFTableMentionView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,9 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "theCell")
+        
+        // insert random frame, because it does not used
+        rfMention = RFTableMentionView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         
         var itemsArray: [RFMentionItem]  = [RFMentionItem]()
         
@@ -39,7 +42,7 @@ class ViewController: UIViewController {
         itemsArray.append(rifki)
         itemsArray.append(aldi)
         
-        rfController.setUpMentionTextView(parentController: self, textView: textView, itemList: itemsArray)
+        rfMention?.setUpMentionTextView(parentController: self, textView: textView, itemList: itemsArray)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotif(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotif(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
@@ -48,7 +51,7 @@ class ViewController: UIViewController {
 
     @IBAction func buttonSubmitPressed(_ sender: Any) {
         var people = "\n"
-        rfController.mentionedItems.forEach { item in
+        rfController?.mentionedItems.forEach { item in
             people.append(contentsOf: item.text)
             people.append(contentsOf: "\n")
         }
@@ -65,13 +68,34 @@ class ViewController: UIViewController {
             print(keyboardFrame)
             constraintBottom.constant = isKeyboardShow ? keyboardFrame.height : 0
             print(constraintBottom.constant)
-            UIView.animate(withDuration: 0.1, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.view.layoutIfNeeded()
+            }, completion: { _ in
+                self.tableView.scrollToRow(at: IndexPath(row: 54, section: 0), at: UITableViewScrollPosition.bottom, animated: true)
             })
-            tableView.scrollToRow(at: IndexPath(row: 54, section: 0), at: UITableViewScrollPosition.bottom, animated: true)
         }
     }
     
+    
+    @IBAction func buttonAccPressed(_ sender: Any) {
+        let nav = TableSampleViewController.instantiate()
+        nav.modalPresentationStyle = .popover
+        nav.modalTransitionStyle = .crossDissolve
+        nav.preferredContentSize = CGSize(width: 270, height: 150)
+//        let controller = nav.topViewController as! TableSampleViewController
+//        controller.preferredContentSize = CGSize(width: 200, height: 150)
+//        let popOver = nav.popoverPresentationController
+//        popOver?.delegate = self
+//        popOver?.barButtonItem = sender as! UIBarButtonItem
+        present(nav, animated: true, completion: nil)
+    }
+    
+}
+
+extension ViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -88,7 +112,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("\(rfController.mentionedItems)")
+        textView.endEditing(true)
+        print("\(rfMention?.mentionedItems)")
     }
     
 }

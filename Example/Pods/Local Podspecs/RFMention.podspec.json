@@ -1,6 +1,6 @@
 {
   "name": "RFMention",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "summary": "Mention people/user in UITextView",
   "description": "You can Mention people/user in UITextView likes whatsapp",
   "homepage": "https://github.com/seirifat/RFMention",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/seirifat/RFMention.git",
-    "tag": "0.1.2"
+    "tag": "0.1.4"
   },
   "platforms": {
     "ios": "9.0"

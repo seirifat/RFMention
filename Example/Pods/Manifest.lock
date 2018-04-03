@@ -1,5 +1,5 @@
 PODS:
-  - RFMention (0.1.2)
+  - RFMention (0.1.4)
 
 DEPENDENCIES:
   - RFMention (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  RFMention: 49c2e5875fc3db5b83999133a01087a0a582aece
+  RFMention: e3aa403ea8c4c6cc18118676b342684f22bd8e9e
 
 PODFILE CHECKSUM: 937e8d2fa9718f520509a2b6510dfbaed6f9ecc4
 
