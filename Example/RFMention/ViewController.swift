@@ -30,12 +30,14 @@ class ViewController: UIViewController {
         
         var itemsArray: [RFMentionItem]  = [RFMentionItem]()
         
-        let alam = RFMentionItem(id: 1, text: "Alam Muh")
-        let bungkhus = RFMentionItem(id: 2, text: "Bungkhus")
-        let dodi = RFMentionItem(id: 2, text: "Dodi Dar")
-        let rifki = RFMentionItem(id: 2, text: "Rifki")
-        let aldi = RFMentionItem(id: 2, text: "Aldi Fir")
+        let rifat = RFMentionItem(id: 1, text: "Rifat")
+        let alam = RFMentionItem(id: 2, text: "Alam Muh")
+        let bungkhus = RFMentionItem(id: 3, text: "Bungkhus")
+        let dodi = RFMentionItem(id: 4, text: "Dodi Dar")
+        let rifki = RFMentionItem(id: 5, text: "Rifki")
+        let aldi = RFMentionItem(id: 6, text: "Aldi Fir")
         
+        itemsArray.append(rifat)
         itemsArray.append(alam)
         itemsArray.append(bungkhus)
         itemsArray.append(dodi)
@@ -51,7 +53,7 @@ class ViewController: UIViewController {
 
     @IBAction func buttonSubmitPressed(_ sender: Any) {
         var people = "\n"
-        rfController?.mentionedItems.forEach { item in
+        rfMention?.mentionedItems.forEach { item in
             people.append(contentsOf: item.text)
             people.append(contentsOf: "\n")
         }
@@ -65,9 +67,7 @@ class ViewController: UIViewController {
             let isKeyboardShow = notification.name == Notification.Name.UIKeyboardWillShow
             
             let keyboardFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-            print(keyboardFrame)
             constraintBottom.constant = isKeyboardShow ? keyboardFrame.height : 0
-            print(constraintBottom.constant)
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
@@ -82,11 +82,6 @@ class ViewController: UIViewController {
         nav.modalPresentationStyle = .popover
         nav.modalTransitionStyle = .crossDissolve
         nav.preferredContentSize = CGSize(width: 270, height: 150)
-//        let controller = nav.topViewController as! TableSampleViewController
-//        controller.preferredContentSize = CGSize(width: 200, height: 150)
-//        let popOver = nav.popoverPresentationController
-//        popOver?.delegate = self
-//        popOver?.barButtonItem = sender as! UIBarButtonItem
         present(nav, animated: true, completion: nil)
     }
     
@@ -113,7 +108,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         textView.endEditing(true)
-        print("\(rfMention?.mentionedItems)")
+        print("\(String(describing: rfMention?.mentionedItems))")
     }
     
 }

@@ -75,7 +75,6 @@ open class RFTableMentionView: UIView {
     
     public func setUpMentionTextView(parentController: UIViewController, textView: UITextView, itemList: [RFMentionItem]) {
         self.backgroundColor = UIColor.clear
-//        parentController.addChildViewController(self)
         parentController.view.addSubview(self)
         parentController.view.bringSubview(toFront: self)
         
@@ -153,6 +152,16 @@ open class RFTableMentionView: UIView {
         }
     }
     
+    private func encode(_ s: String) -> String {
+        let data = s.data(using: .nonLossyASCII, allowLossyConversion: true)!
+        return String(data: data, encoding: .utf8)!
+    }
+    
+    private func decode(_ s: String) -> String? {
+        let data = s.data(using: .utf8)!
+        return String(data: data, encoding: .nonLossyASCII)
+    }
+    
 }
 
 // MARK: UITABLEVIEW DELEGATE DATASOURCE
@@ -191,10 +200,8 @@ extension RFTableMentionView: UITableViewDelegate, UITableViewDataSource {
         
         if let selectedRange = textViewMention.selectedTextRange {
             let cursorPosition = textViewMention.offset(from: textViewMention.beginningOfDocument, to: selectedRange.start)
-            print("\(cursorPosition)")
             mutableAttributed.insert(mentionedText, at: cursorPosition)
             mutableAttributed.insert(NSAttributedString(string: " ", attributes: defaultAttributed), at: cursorPosition + rfMentionItemsFilter[indexPath.row].text.count + 1)
-            //            mutableAttributed.addAttributes(defaultAttributed, range: NSMakeRange(cursorPosition, 0))
             mutableAttributed.replaceCharacters(in: NSMakeRange(currentMention.range.location, searchString.count + 1), with: NSAttributedString(string: ""))
         }
         
@@ -203,12 +210,7 @@ extension RFTableMentionView: UITableViewDelegate, UITableViewDataSource {
         
         mentionedItems.append(currentMention)
         
-        //        mutableAttributed.addAttribute(NSAttributedStringKey.backgroundColor, value: UIColor.yellow, range: currentMention.range)
-        
         textViewMention.attributedText = mutableAttributed
-        
-        //        print(currentMention)
-        
         textViewMention.selectedRange = NSMakeRange(currentMention.range.location + currentMention.textAt.count + 1, 0)
         
         self.hideList()
@@ -221,15 +223,13 @@ extension RFTableMentionView: UITableViewDelegate, UITableViewDataSource {
 extension RFTableMentionView: UITextViewDelegate {
     
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        //        print(range)
-        
-        if text != "" && range.location - 1 >= 0 {
+        if text != "" && range.location - 1 >= 0 && !encode(text).contains("\\u") {
             let mutableAttributed = NSMutableAttributedString()
             mutableAttributed.append(textViewMention.attributedText)
             mutableAttributed.addAttributes(defaultAttributed, range: NSMakeRange(range.location - 1, 1))
             textViewMention.attributedText = mutableAttributed
         }
-        
+
         if isTextViewSearch == false {
             if text == "" {
                 if mentionedItems.count > 0 {
@@ -240,7 +240,7 @@ extension RFTableMentionView: UITextViewDelegate {
                             mutableAttributed.replaceCharacters(in: mentionedItems[idx].range, with: NSAttributedString(string: ""))
                             textViewMention.attributedText = mutableAttributed
                             textViewMention.selectedRange = NSMakeRange(mentionedItems[idx].range.location, 0)
-                            
+
                             for idxOther in 0 ..< mentionedItems.count {
                                 if idx != idxOther {
                                     if mentionedItems[idxOther].range.location > mentionedItems[idx].range.location {
@@ -248,16 +248,16 @@ extension RFTableMentionView: UITextViewDelegate {
                                     }
                                 }
                             }
-                            
+
                             mentionedItems.remove(at: idx)
-                            
+
                             return false
                         } else if mentionedItems[idx].range.location > range.location {
                             mentionedItems[idx].range.location -= 1
                         }
                     }
                 }
-                
+
                 isTextViewSearch = false
                 searchString = ""
                 rfMentionItemsFilter = rfMentionItems
